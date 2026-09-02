@@ -18,18 +18,16 @@ function WhatsAppButton() {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {/* Glass Background Effect */}
       <div className="absolute inset-0 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full blur-2xl opacity-60 animate-pulse" />
-      
+
       <motion.a
         href={whatsappLink}
         target="_blank"
         rel="noopener noreferrer"
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
-        className="relative flex items-center gap-2 sm:gap-3 px-3 sm:px-5 py-2.5 sm:py-3 bg-white/10 backdrop-blur-xl border border-white/30 rounded-full shadow-2xl overflow-hidden group"
+        className="relative flex items-center gap-2 sm:gap-3 px-3 sm:px-5 py-2.5 sm:py-3 bg-white/90 backdrop-blur-xl border border-white/30 rounded-full shadow-2xl overflow-hidden group"
       >
-        {/* Animated Border */}
         <motion.div
           animate={{
             rotate: 360,
@@ -42,16 +40,13 @@ function WhatsAppButton() {
           className="absolute inset-0 rounded-full bg-gradient-to-r from-green-400 via-emerald-500 to-green-400 opacity-0 group-hover:opacity-100"
           style={{ padding: "2px" }}
         />
-        
-        {/* Icon */}
-        <FaWhatsapp className="text-green-400 text-xl sm:text-2xl group-hover:scale-110 transition-transform" />
-        
-        {/* Text - Hidden on small screens */}
-        <span className="text-white font-semibold text-xs sm:text-sm hidden sm:inline">
+
+        <FaWhatsapp className="text-green-500 text-xl sm:text-2xl group-hover:scale-110 transition-transform" />
+
+        <span className="text-deepCharcoal font-semibold text-xs sm:text-sm hidden sm:inline">
           Let's Connect
         </span>
-        
-        {/* Status Indicator */}
+
         <div className="relative">
           <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-green-500 rounded-full animate-pulse" />
           <div className="absolute inset-0 w-1.5 h-1.5 sm:w-2 sm:h-2 bg-green-500 rounded-full animate-ping" />
