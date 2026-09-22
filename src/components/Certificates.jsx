@@ -1,5 +1,5 @@
 // src/components/Certificates.jsx
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   FaTimes,
   FaChevronLeft,
@@ -10,273 +10,241 @@ import {
 } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
 
-function Certificates() {
-  const [selectedImage, setSelectedImage] = useState(null);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [hoveredCard, setHoveredCard] = useState(null);
+const fadeUp = {
+  hidden: { opacity: 0, y: 40 },
+  visible: (i = 0) => ({
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.5, delay: i * 0.08 },
+  }),
+};
 
-  const certificates = [
-    {
-      id: 1,
-      title: "Code Alpha Internship",
-      issuer: "CodeAlpha",
-      image: "/CODE_ALPHA_INTERNSHIP_CERTIFICATE.jpg",
-      description: "Web Development Internship Certificate",
-    },
-    {
-      id: 2,
-      title: "Communication Skills",
-      issuer: "Dgskills",
-      image: "/Communication_certificate.jpg",
-      description: "Professional Communication Certification",
-    },
-    {
-      id: 3,
-      title: "HTML Certification",
-      issuer: "KG Coding",
-      image: "/HTML_CERTIFICATE.jpg",
-      description: "HTML Development Certification",
-    },
-    {
-      id: 4,
-      title: "JavaScript Certification",
-      issuer: "KG Coding",
-      image: "/JS_CERTIFICATE.jpg",
-      description: "JavaScript Development Certification",
-    },
-    {
-      id: 5,
-      title: "SEO Certification",
-      issuer: "Dgskills",
-      image: "/seo_certificate.jpg",
-      description: "Search Engine Optimization Certification",
-    },
-    {
-      id: 6,
-      title: "WordPress Certification",
-      issuer: "Learning by Earning",
-      image: "/WORPDRESS_CERTIFICATE.jpg",
-      description: "WordPress Development Certification",
-    },
-  ];
+const certificates = [
+  {
+    id: 1,
+    title: "Code Alpha Internship",
+    issuer: "CodeAlpha",
+    image: "/CODE_ALPHA_INTERNSHIP_CERTIFICATE.jpg",
+  },
+  {
+    id: 2,
+    title: "Communication Skills",
+    issuer: "Dgskills",
+    image: "/Communication_certificate.jpg",
+  },
+  {
+    id: 3,
+    title: "HTML Certification",
+    issuer: "KG Coding",
+    image: "/HTML_CERTIFICATE.jpg",
+  },
+  {
+    id: 4,
+    title: "JavaScript Certification",
+    issuer: "KG Coding",
+    image: "/JS_CERTIFICATE.jpg",
+  },
+  {
+    id: 5,
+    title: "SEO Certification",
+    issuer: "Dgskills",
+    image: "/seo_certificate.jpg",
+  },
+  {
+    id: 6,
+    title: "WordPress Certification",
+    issuer: "Learning by Earning",
+    image: "/WORPDRESS_CERTIFICATE.jpg",
+  },
+];
 
-  const openLightbox = (index) => {
-    setCurrentIndex(index);
-    setSelectedImage(certificates[index]);
-  };
+const Certificates = () => {
+  const [current, setCurrent] = useState(null);
 
-  const closeLightbox = () => {
-    setSelectedImage(null);
-  };
+  const next = () => setCurrent((prev) => (prev + 1) % certificates.length);
+  const prev = () =>
+    setCurrent(
+      (prev) => (prev - 1 + certificates.length) % certificates.length,
+    );
 
-  const nextImage = () => {
-    const nextIndex = (currentIndex + 1) % certificates.length;
-    setCurrentIndex(nextIndex);
-    setSelectedImage(certificates[nextIndex]);
-  };
+  useEffect(() => {
+    if (current === null) return;
+    const onKey = (e) => {
+      if (e.key === "ArrowRight") next();
+      if (e.key === "ArrowLeft") prev();
+      if (e.key === "Escape") setCurrent(null);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [current]);
 
-  const prevImage = () => {
-    const prevIndex =
-      (currentIndex - 1 + certificates.length) % certificates.length;
-    setCurrentIndex(prevIndex);
-    setSelectedImage(certificates[prevIndex]);
-  };
-
-  const handleDownload = async () => {
-    if (selectedImage) {
-      try {
-        const response = await fetch(selectedImage.image);
-        const blob = await response.blob();
-        const url = window.URL.createObjectURL(blob);
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = `${selectedImage.title.replace(/\s+/g, "_")}.jpg`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        window.URL.revokeObjectURL(url);
-      } catch (error) {
-        console.error("Error downloading image:", error);
-      }
+  const download = async () => {
+    const cert = certificates[current];
+    try {
+      const res = await fetch(cert.image);
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `${cert.title.replace(/\s+/g, "_")}.jpg`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch (e) {
+      console.error(e);
     }
   };
 
-  useState(() => {
-    const handleKeyDown = (e) => {
-      if (selectedImage) {
-        if (e.key === "ArrowRight") nextImage();
-        if (e.key === "ArrowLeft") prevImage();
-        if (e.key === "Escape") closeLightbox();
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [selectedImage, currentIndex]);
-
   return (
-    <div
-      name="Certificates"
-      className="relative min-h-screen bg-lightWhite py-20"
-    >
-      <div className="absolute inset-0">
-        <div className="absolute top-20 left-10 w-96 h-96 bg-mutedBlue/20 rounded-full filter blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-20 right-10 w-96 h-96 bg-mutedBlue/20 rounded-full filter blur-3xl animate-pulse delay-1000"></div>
-        <div className="absolute top-1/2 left-1/2 w-96 h-96 bg-mutedBlue/20 rounded-full filter blur-3xl animate-pulse delay-2000"></div>
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#e5e7eb_1px,transparent_1px),linear-gradient(to_bottom,#e5e7eb_1px,transparent_1px)] bg-[size:50px_50px] opacity-30" />
-      </div>
-
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="relative py-16 sm:py-20 lg:py-24">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: -50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="text-center mb-12"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          variants={fadeUp}
+          className="text-center mb-12 sm:mb-16"
         >
           <motion.div
-            animate={{ y: [0, -10, 0] }}
+            animate={{ y: [0, -6, 0] }}
             transition={{ duration: 2, repeat: Infinity }}
             className="inline-block mb-4"
           >
-            <FaCertificate className="text-5xl text-mutedBlue" />
+            <FaCertificate className="text-4xl sm:text-5xl text-accent" />
           </motion.div>
-          <h1 className="text-5xl md:text-6xl font-bold mb-4 text-deepCharcoal">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white">
             My Certificates
-          </h1>
-          <div className="w-24 h-1 bg-mutedBlue mx-auto rounded-full" />
-          <p className="text-deepCharcoal/70 mt-4">
-            Professional certifications and achievements
+          </h2>
+          <div className="w-20 h-1 bg-accent rounded-full mx-auto mt-4" />
+          <p className="text-gray-400 mt-4 text-sm sm:text-base">
+            Professional certifications and continuous learning.
           </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {certificates.map((cert, idx) => (
-            <motion.div
-              key={cert.id}
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: idx * 0.1 }}
+        {/* Grid */}
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-6">
+          {certificates.map((c, i) => (
+            <motion.button
+              key={c.id}
+              custom={i}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-50px" }}
+              variants={fadeUp}
               whileHover={{ y: -8 }}
-              onMouseEnter={() => setHoveredCard(cert.id)}
-              onMouseLeave={() => setHoveredCard(null)}
-              className="group cursor-pointer"
-              onClick={() => openLightbox(idx)}
+              onClick={() => setCurrent(i)}
+              className="group text-left relative rounded-2xl bg-white/[0.03] border border-white/10 overflow-hidden hover:border-accent/40 backdrop-blur-sm transition-all"
             >
-              <div className="relative bg-white rounded-2xl border border-gray-200 overflow-hidden hover:border-mutedBlue/50 transition-all duration-500 shadow-sm">
-                <div className="relative h-64 overflow-hidden bg-gray-100">
-                  <img
-                    src={cert.image}
-                    alt={cert.title}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                    onError={(e) => {
-                      e.target.src =
-                        "https://placehold.co/600x400/e5e7eb/6c8ebf?text=Certificate";
-                    }}
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-deepCharcoal/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500">
-                    <div className="p-3 rounded-full bg-mutedBlue text-white">
-                      <FaExpand size={24} />
-                    </div>
+              <div className="relative h-56 overflow-hidden bg-ink/40">
+                <img
+                  src={c.image}
+                  alt={c.title}
+                  loading="lazy"
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  onError={(e) => {
+                    e.target.src =
+                      "https://placehold.co/600x400/0b1220/6ea8fe?text=Certificate";
+                  }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-ink via-transparent to-transparent opacity-0 group-hover:opacity-60 transition-opacity" />
+                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                  <div className="p-3 rounded-full bg-accent text-ink">
+                    <FaExpand />
                   </div>
                 </div>
-
-                <div className="p-5 text-center">
-                  <h3 className="text-lg font-bold text-deepCharcoal group-hover:text-mutedBlue transition-colors">
-                    {cert.title}
-                  </h3>
-                  <p className="text-sm text-deepCharcoal/70 mt-1">
-                    {cert.issuer}
-                  </p>
-                </div>
-
-                <div
-                  className={`absolute bottom-0 left-0 h-0.5 bg-mutedBlue transition-all duration-500 ${
-                    hoveredCard === cert.id ? "w-full" : "w-0"
-                  }`}
-                />
               </div>
-            </motion.div>
+              <div className="p-5">
+                <h3 className="text-base font-bold text-white group-hover:text-accent transition-colors">
+                  {c.title}
+                </h3>
+                <p className="text-xs text-gray-500 mt-1">{c.issuer}</p>
+              </div>
+              <div className="absolute bottom-0 left-0 h-0.5 bg-accent w-0 group-hover:w-full transition-all duration-500" />
+            </motion.button>
           ))}
         </div>
       </div>
 
+      {/* Lightbox */}
       <AnimatePresence>
-        {selectedImage && (
+        {current !== null && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-deepCharcoal/95 backdrop-blur-xl"
-            onClick={closeLightbox}
+            onClick={() => setCurrent(null)}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-ink/95 backdrop-blur-xl p-4"
           >
             <motion.div
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              transition={{ type: "spring", damping: 25 }}
-              className="relative max-w-5xl w-full mx-4"
               onClick={(e) => e.stopPropagation()}
+              className="relative max-w-4xl w-full"
             >
               <button
-                onClick={closeLightbox}
-                className="absolute -top-12 right-0 p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors z-10"
+                onClick={() => setCurrent(null)}
+                aria-label="Close"
+                className="absolute -top-12 right-0 p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors"
               >
-                <FaTimes size={24} className="text-white" />
+                <FaTimes size={20} />
               </button>
 
               <button
-                onClick={prevImage}
-                className="absolute left-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-deepCharcoal/50 hover:bg-deepCharcoal/75 transition-colors z-10"
+                onClick={prev}
+                aria-label="Previous"
+                className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-ink/70 hover:bg-accent/80 text-white border border-white/10 transition-colors z-10"
               >
-                <FaChevronLeft size={24} className="text-white" />
+                <FaChevronLeft size={18} />
               </button>
               <button
-                onClick={nextImage}
-                className="absolute right-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-deepCharcoal/50 hover:bg-deepCharcoal/75 transition-colors z-10"
+                onClick={next}
+                aria-label="Next"
+                className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-ink/70 hover:bg-accent/80 text-white border border-white/10 transition-colors z-10"
               >
-                <FaChevronRight size={24} className="text-white" />
+                <FaChevronRight size={18} />
               </button>
 
-              <div className="relative bg-white rounded-2xl overflow-hidden border border-gray-200">
+              <div className="rounded-2xl overflow-hidden border border-white/15 bg-ink">
                 <img
-                  src={selectedImage.image}
-                  alt={selectedImage.title}
-                  className="w-full h-auto max-h-[70vh] object-contain"
+                  src={certificates[current].image}
+                  alt={certificates[current].title}
+                  className="w-full max-h-[65vh] object-contain bg-ink"
                   onError={(e) => {
                     e.target.src =
-                      "https://placehold.co/1200x800/e5e7eb/6c8ebf?text=Certificate";
+                      "https://placehold.co/1200x800/0b1220/6ea8fe?text=Certificate";
                   }}
                 />
-                <div className="p-6 bg-white">
-                  <div className="flex items-center justify-between flex-wrap gap-4">
-                    <div>
-                      <h3 className="text-2xl font-bold text-deepCharcoal">
-                        {selectedImage.title}
-                      </h3>
-                      <p className="text-deepCharcoal/70 mt-1">
-                        {selectedImage.issuer}
-                      </p>
-                    </div>
-                    <button
-                      onClick={handleDownload}
-                      className="px-6 py-3 rounded-lg bg-mutedBlue text-white font-semibold flex items-center gap-2 hover:shadow-lg hover:shadow-mutedBlue/25 transition-all duration-300"
-                    >
-                      <FaDownload size={16} />
-                      Download Certificate
-                    </button>
+                <div className="p-4 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                  <div>
+                    <h3 className="text-lg sm:text-xl font-bold text-white">
+                      {certificates[current].title}
+                    </h3>
+                    <p className="text-sm text-gray-400">
+                      {certificates[current].issuer}
+                    </p>
                   </div>
+                  <button
+                    onClick={download}
+                    className="px-5 py-2.5 rounded-lg bg-accent text-ink text-sm font-semibold flex items-center gap-2 hover:bg-accent/90 transition-colors"
+                  >
+                    <FaDownload size={14} />
+                    Download
+                  </button>
                 </div>
               </div>
 
-              <div className="text-center mt-4 text-sm text-deepCharcoal/60">
-                {currentIndex + 1} / {certificates.length}
+              <div className="text-center mt-3 text-xs text-gray-500">
+                {current + 1} / {certificates.length}
               </div>
             </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </section>
   );
-}
+};
 
 export default Certificates;

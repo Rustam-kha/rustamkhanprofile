@@ -1,40 +1,40 @@
 // src/components/Breadcrumb.jsx
-import { Link, useLocation } from 'react-router-dom';
-import { FaHome, FaChevronRight } from 'react-icons/fa';
-import { motion } from 'framer-motion';
+import { Link, useLocation } from "react-router-dom";
+import { FaHome, FaChevronRight } from "react-icons/fa";
+import { motion } from "framer-motion";
 
 const Breadcrumb = () => {
   const location = useLocation();
-  const pathnames = location.pathname.split("/").filter((x) => x);
+  const parts = location.pathname.split("/").filter(Boolean);
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: -20 }}
+      initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      className="bg-white/80 backdrop-blur-sm border-b border-gray-200 py-3"
+      transition={{ duration: 0.4 }}
+      className="border-y border-white/5 bg-ink/40 backdrop-blur-sm"
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <nav className="flex items-center gap-2 text-sm">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+        <nav className="flex items-center flex-wrap gap-1.5 text-xs sm:text-sm">
           <Link
             to="/"
-            className="text-deepCharcoal/60 hover:text-mutedBlue transition-colors flex items-center gap-1"
+            className="flex items-center gap-1 text-gray-400 hover:text-accent transition-colors"
           >
-            <FaHome size={14} className="text-mutedBlue" />
-            Home
+            <FaHome size={12} className="text-accent" />
+            <span>Home</span>
           </Link>
-          {pathnames.map((name, index) => {
-            const routeTo = `/${pathnames.slice(0, index + 1).join("/")}`;
-            const isLast = index === pathnames.length - 1;
+          {parts.map((name, i) => {
+            const to = `/${parts.slice(0, i + 1).join("/")}`;
+            const last = i === parts.length - 1;
             return (
-              <span key={routeTo} className="flex items-center gap-2">
-                <FaChevronRight size={12} className="text-deepCharcoal/30" />
-                {isLast ? (
-                  <span className="text-mutedBlue capitalize">{name}</span>
+              <span key={to} className="flex items-center gap-1.5">
+                <FaChevronRight size={10} className="text-gray-600" />
+                {last ? (
+                  <span className="text-accent capitalize">{name}</span>
                 ) : (
                   <Link
-                    to={routeTo}
-                    className="text-deepCharcoal/60 hover:text-mutedBlue transition-colors capitalize"
+                    to={to}
+                    className="text-gray-400 hover:text-accent transition-colors capitalize"
                   >
                     {name}
                   </Link>

@@ -1,22 +1,287 @@
-@import url("https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Poppins:wght@500&display=swap");
+/* =========================================================
+   src/index.css
+   Flowing Solar Energy Network Background
+   ========================================================= */
+
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap");
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-body {
-  font-family: "Poppins", sans-serif;
-  overflow-x: hidden;
-  background-color: #f8f9fa; /* lightWhite fallback */
-  color: #1a1a1a; /* deepCharcoal fallback */
+
+/* =========================================================
+   BASE
+   ========================================================= */
+
+* {
+  -webkit-tap-highlight-color: transparent;
+  box-sizing: border-box;
 }
 
 html {
   scroll-behavior: smooth;
+  background: #020711;
 }
 
-/* Custom scroll animation */
-@keyframes scroll {
+body {
+  margin: 0;
+  min-height: 100vh;
+  overflow-x: hidden;
+
+  font-family:
+    "Inter",
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+
+  color: #eaf7ff;
+  background: #020711;
+
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+
+/* =========================================================
+   MEDIA
+   ========================================================= */
+
+img,
+video,
+svg,
+canvas {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+
+/* =========================================================
+   FONTS
+   ========================================================= */
+
+.font-mono {
+  font-family:
+    "JetBrains Mono",
+    ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    Monaco,
+    Consolas,
+    monospace;
+}
+
+
+/* =========================================================
+   SCROLLBAR
+   ========================================================= */
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #020711;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #16c7ff, #0873bd);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #57dcff, #1199df);
+}
+
+
+/* =========================================================
+   SELECTION
+   ========================================================= */
+
+::selection {
+  background: rgba(22, 199, 255, 0.8);
+  color: #00111c;
+}
+
+
+/* =========================================================
+   BACKGROUND MOTION — breathing glow
+   ========================================================= */
+
+@keyframes background-breathe {
+  0%,
+  100% {
+    opacity: 0.65;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+}
+
+.animate-background-breathe {
+  animation: background-breathe 12s ease-in-out infinite;
+}
+
+
+/* =========================================================
+   FLOWING GRID
+   ========================================================= */
+
+@keyframes grid-flow {
+  0% {
+    background-position:
+      0 0,
+      0 0;
+  }
+  100% {
+    background-position:
+      90px 90px,
+      90px 90px;
+  }
+}
+
+.animate-grid-flow {
+  animation: grid-flow 28s linear infinite;
+}
+
+
+/* =========================================================
+   ENERGY AURA — floating blobs
+   ========================================================= */
+
+@keyframes aura-flow {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  33% {
+    transform: translate3d(30px, -20px, 0) scale(1.05);
+  }
+  66% {
+    transform: translate3d(-25px, 25px, 0) scale(1.08);
+  }
+}
+
+.animate-aura-flow {
+  animation: aura-flow 18s ease-in-out infinite;
+}
+
+
+/* =========================================================
+   ENERGY SWEEP — moving light band
+   ========================================================= */
+
+@keyframes energy-sweep {
+  0% {
+    transform: translateX(-140%) skewX(-18deg);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.25;
+  }
+  50% {
+    opacity: 0.55;
+  }
+  85% {
+    opacity: 0.18;
+  }
+  100% {
+    transform: translateX(140%) skewX(-18deg);
+    opacity: 0;
+  }
+}
+
+.animate-energy-sweep {
+  animation: energy-sweep 13s ease-in-out infinite;
+}
+
+
+/* =========================================================
+   ORBITAL RINGS
+   ========================================================= */
+
+@keyframes orbit-rotate {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+.animate-orbit {
+  animation: orbit-rotate 45s linear infinite;
+}
+
+
+/* =========================================================
+   SLOW SPIN — for rotating conic gradients
+   ========================================================= */
+
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 60s linear infinite;
+}
+
+
+/* =========================================================
+   PULSE SLOW — for breathing nebula glows
+   ========================================================= */
+
+@keyframes pulse-slow {
+  0%,
+  100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1.05);
+  }
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 8s ease-in-out infinite;
+}
+
+
+/* =========================================================
+   SHIMMER — diagonal light sweep across the screen
+   ========================================================= */
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 12s linear infinite;
+}
+
+
+/* =========================================================
+   SCROLL INDICATOR
+   ========================================================= */
+
+@keyframes scroll-down {
   0% {
     transform: translateY(0);
     opacity: 1;
@@ -28,41 +293,135 @@ html {
 }
 
 .animate-scroll {
-  animation: scroll 1.5s ease-in-out infinite;
+  animation: scroll-down 1.5s ease-in-out infinite;
 }
 
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
+
+/* =========================================================
+   CONTENT WRAPPER
+   ========================================================= */
+
+.site-content {
+  position: relative;
+  z-index: 1;
 }
 
-::-webkit-scrollbar-track {
-  background: #e5e7eb; /* light gray */
+
+/* =========================================================
+   ENERGY GLASS — card surfaces
+   ========================================================= */
+
+.energy-glass {
+  background: rgba(2, 15, 29, 0.42);
+  border: 1px solid rgba(68, 205, 255, 0.1);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow:
+    0 20px 70px rgba(0, 0, 0, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.035);
 }
 
-::-webkit-scrollbar-thumb {
-  background: #6c8ebf; /* mutedBlue */
-  border-radius: 4px;
+
+/* =========================================================
+   TEXT GLOW
+   ========================================================= */
+
+.energy-text-glow {
+  text-shadow:
+    0 0 16px rgba(25, 199, 255, 0.32),
+    0 0 45px rgba(25, 145, 220, 0.12);
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: #5a7aa8; /* darker mutedBlue */
+
+/* =========================================================
+   LINE CLAMP
+   ========================================================= */
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
-/* Selection color */
-::selection {
-  background: #6c8ebf; /* mutedBlue */
-  color: white;
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
-/* Loading animation for images */
-img {
-  transition: opacity 0.5s ease;
+
+/* =========================================================
+   GRADIENT TEXT UTILITY
+   ========================================================= */
+
+.text-gradient-energy {
+  background: linear-gradient(
+    135deg,
+    #16c7ff 0%,
+    #eaf7ff 55%,
+    #e8c078 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
 }
 
-/* Responsive text utilities */
-@media (max-width: 640px) {
-  .text-hero {
-    font-size: 2.5rem;
+
+/* =========================================================
+   GLOW RING — for hover focus rings on cards
+   ========================================================= */
+
+.glow-ring {
+  box-shadow:
+    0 0 0 1px rgba(22, 199, 255, 0.25),
+    0 0 24px rgba(22, 199, 255, 0.18);
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 767px) {
+  .animate-grid-flow {
+    animation-duration: 38s;
+  }
+
+  .animate-orbit {
+    animation-duration: 60s;
+  }
+
+  .animate-spin-slow {
+    animation-duration: 90s;
+  }
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 1023px) {
+  #profile-container {
+    perspective: none !important;
+  }
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
   }
 }

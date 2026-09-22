@@ -1,169 +1,131 @@
 // src/components/ProjectSlider.jsx
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  FaArrowLeft,
-  FaArrowRight,
-  FaExternalLinkAlt,
-  FaGithub,
-} from "react-icons/fa";
+import { FaArrowLeft, FaArrowRight, FaExternalLinkAlt } from "react-icons/fa";
 
-const ProjectSlider = ({ projects }) => {
-  const [currentIndex, setCurrentIndex] = useState(0);
+const ProjectSlider = ({ projects = [] }) => {
+  const [index, setIndex] = useState(0);
   const [direction, setDirection] = useState(0);
 
-  const nextSlide = () => {
-    setDirection(1);
-    setCurrentIndex((prev) => (prev + 1) % projects.length);
-  };
-
-  const prevSlide = () => {
-    setDirection(-1);
-    setCurrentIndex((prev) => (prev - 1 + projects.length) % projects.length);
+  const go = (dir) => {
+    setDirection(dir);
+    setIndex((prev) => (prev + dir + projects.length) % projects.length);
   };
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      nextSlide();
-    }, 5000);
-    return () => clearInterval(timer);
-  }, []);
+    if (projects.length < 2) return;
+    const t = setInterval(() => go(1), 6000);
+    return () => clearInterval(t);
+  }, [index, projects.length]);
 
-  const slideVariants = {
-    enter: (direction) => ({
-      x: direction > 0 ? 1000 : -1000,
+  if (!projects.length) return null;
+
+  const current = projects[index];
+
+  const variants = {
+    enter: (d) => ({ x: d > 0 ? 300 : -300, opacity: 0 }),
+    center: { x: 0, opacity: 1, transition: { duration: 0.5 } },
+    exit: (d) => ({
+      x: d > 0 ? -300 : 300,
       opacity: 0,
-      scale: 0.8,
-    }),
-    center: {
-      x: 0,
-      opacity: 1,
-      scale: 1,
-      transition: { duration: 0.6, ease: "easeOut" },
-    },
-    exit: (direction) => ({
-      x: direction > 0 ? -1000 : 1000,
-      opacity: 0,
-      scale: 0.8,
-      transition: { duration: 0.6, ease: "easeIn" },
+      transition: { duration: 0.4 },
     }),
   };
 
   return (
-    <div className="relative overflow-hidden">
-      <div className="relative h-[500px] md:h-[600px] rounded-2xl overflow-hidden shadow-lg">
+    <div className="relative rounded-3xl overflow-hidden border border-white/10 bg-white/[0.02] backdrop-blur-sm">
+      <div className="relative h-[400px] sm:h-[480px] md:h-[560px]">
         <AnimatePresence mode="wait" custom={direction}>
           <motion.div
-            key={currentIndex}
+            key={index}
             custom={direction}
-            variants={slideVariants}
+            variants={variants}
             initial="enter"
             animate="center"
             exit="exit"
             className="absolute inset-0"
           >
             <img
-              src={projects[currentIndex].image}
-              alt={projects[currentIndex].title}
+              src={current.image}
+              alt={current.title}
               className="w-full h-full object-cover"
+              loading="lazy"
             />
+            {/* Dark overlay bottom-up so text is readable */}
+            <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/70 to-ink/20" />
 
-            <div className="absolute inset-0 bg-gradient-to-t from-deepCharcoal/90 via-deepCharcoal/60 to-transparent" />
-            <div className="absolute inset-0 bg-gradient-to-r from-deepCharcoal/40 via-transparent to-transparent" />
+            <div className="absolute inset-x-0 bottom-0 p-6 sm:p-8 md:p-12">
+              <div className="max-w-2xl">
+                <span className="inline-block px-3 py-1 bg-accent/20 border border-accent/30 rounded-full text-accent text-[10px] sm:text-xs font-medium uppercase tracking-wider mb-3">
+                  {current.category}
+                </span>
 
-            <div className="absolute bottom-0 left-0 right-0 p-8 md:p-12">
-              <div className="max-w-3xl">
-                <div className="flex items-center gap-3 mb-3">
-                  <span className="inline-block px-3 py-1 bg-mutedBlue/30 backdrop-blur-sm border border-mutedBlue/30 rounded-full text-mutedBlue text-xs font-medium uppercase tracking-wider">
-                    {projects[currentIndex].category}
-                  </span>
-                  <span className="text-deepCharcoal/60 text-xs flex items-center gap-1">
-                    <span className="w-1 h-1 bg-mutedBlue rounded-full"></span>
-                    {currentIndex + 1} / {projects.length}
-                  </span>
-                </div>
-
-                <h3 className="text-3xl md:text-4xl font-bold text-white mb-2 leading-tight">
-                  {projects[currentIndex].title}
+                <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-2">
+                  {current.title}
                 </h3>
 
-                <p className="text-gray-300 text-sm md:text-base mb-4 max-w-xl leading-relaxed">
-                  {projects[currentIndex].description}
+                <p className="text-gray-300 text-xs sm:text-sm mb-4 line-clamp-2">
+                  {current.description}
                 </p>
 
-                <div className="flex flex-wrap gap-2 mb-6">
-                  {projects[currentIndex].technologies?.map((tech, i) => (
+                <div className="flex flex-wrap gap-2 mb-5">
+                  {current.technologies?.slice(0, 4).map((t, i) => (
                     <span
                       key={i}
-                      className="px-3 py-1 bg-white/10 backdrop-blur-sm border border-white/10 rounded-full text-gray-300 text-xs"
+                      className="px-2.5 py-1 rounded-full bg-white/10 text-gray-200 text-[10px] sm:text-xs backdrop-blur-sm border border-white/10"
                     >
-                      {tech}
+                      {t}
                     </span>
                   ))}
                 </div>
 
-                <div className="flex flex-wrap gap-3">
-                  <a
-                    href={projects[currentIndex].link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-6 py-2.5 bg-mutedBlue rounded-full text-white font-semibold text-sm hover:shadow-lg hover:shadow-mutedBlue/25 transition-all duration-300 group"
-                  >
-                    <FaExternalLinkAlt
-                      size={14}
-                      className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform"
-                    />
-                    View Live Demo
-                  </a>
-                  {projects[currentIndex].github && (
-                    <a
-                      href={projects[currentIndex].github}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 px-6 py-2.5 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full text-white font-semibold text-sm hover:bg-white/20 transition-all duration-300"
-                    >
-                      <FaGithub size={14} />
-                      Source Code
-                    </a>
-                  )}
-                </div>
+                <a
+                  href={current.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 bg-accent text-ink rounded-full text-xs sm:text-sm font-semibold hover:bg-accent/90 hover:shadow-lg hover:shadow-accent/30 transition-all group"
+                >
+                  <FaExternalLinkAlt size={12} />
+                  View Project
+                </a>
               </div>
             </div>
           </motion.div>
         </AnimatePresence>
 
+        {/* Arrows */}
         <button
-          onClick={prevSlide}
-          className="absolute left-4 top-1/2 -translate-y-1/2 p-3 bg-deepCharcoal/60 backdrop-blur-sm rounded-full text-white hover:bg-mutedBlue/60 hover:scale-110 transition-all duration-300 z-10 border border-white/10"
+          onClick={() => go(-1)}
+          aria-label="Previous"
+          className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 p-2.5 sm:p-3 rounded-full bg-ink/60 hover:bg-accent/80 backdrop-blur-md text-white border border-white/10 transition-all z-10"
         >
-          <FaArrowLeft size={18} />
+          <FaArrowLeft size={14} />
         </button>
         <button
-          onClick={nextSlide}
-          className="absolute right-4 top-1/2 -translate-y-1/2 p-3 bg-deepCharcoal/60 backdrop-blur-sm rounded-full text-white hover:bg-mutedBlue/60 hover:scale-110 transition-all duration-300 z-10 border border-white/10"
+          onClick={() => go(1)}
+          aria-label="Next"
+          className="absolute right-3 sm:right-4 top-1/2 -translate-y-1/2 p-2.5 sm:p-3 rounded-full bg-ink/60 hover:bg-accent/80 backdrop-blur-md text-white border border-white/10 transition-all z-10"
         >
-          <FaArrowRight size={18} />
+          <FaArrowRight size={14} />
         </button>
 
-        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
-          {projects.map((_, index) => (
+        {/* Dots */}
+        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
+          {projects.map((_, i) => (
             <button
-              key={index}
+              key={i}
               onClick={() => {
-                setDirection(index > currentIndex ? 1 : -1);
-                setCurrentIndex(index);
+                setDirection(i > index ? 1 : -1);
+                setIndex(i);
               }}
-              className={`h-2 rounded-full transition-all duration-300 ${
-                index === currentIndex
-                  ? "w-8 bg-mutedBlue shadow-lg shadow-mutedBlue/50"
-                  : "w-2 bg-white/40 hover:bg-white/70"
+              aria-label={`Slide ${i + 1}`}
+              className={`h-1.5 rounded-full transition-all duration-300 ${
+                i === index
+                  ? "w-6 bg-accent"
+                  : "w-1.5 bg-white/40 hover:bg-white/70"
               }`}
             />
           ))}
-        </div>
-
-        <div className="absolute top-4 right-4 px-3 py-1 bg-deepCharcoal/50 backdrop-blur-sm rounded-full text-white text-xs border border-white/10">
-          {currentIndex + 1} / {projects.length}
         </div>
       </div>
     </div>

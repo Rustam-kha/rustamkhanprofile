@@ -14,51 +14,63 @@ const HeroSection = ({
   reversed = false,
 }) => {
   return (
-    <section className="relative min-h-[60vh] flex items-center overflow-hidden bg-lightWhite">
-      {/* Background Image with Light Overlay */}
+    <section className="relative min-h-[70vh] lg:min-h-[75vh] flex items-center overflow-hidden pt-24 pb-16">
+      {/* Background image */}
       <div className="absolute inset-0">
-        <img src={image} alt={title} className="w-full h-full object-cover" />
-        {/* Light overlay for text readability, less dark */}
-        <div className="absolute inset-0 bg-gradient-to-r from-white/80 via-white/60 to-white/40" />
-        {/* Subtle dark gradient from bottom for depth (shadow bottom to upper) */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
+        <img
+          src={image}
+          alt={title}
+          loading="eager"
+          className="w-full h-full object-cover scale-105"
+        />
+        {/* Soft tint overlay — keeps background visible but text readable */}
+        <div className="absolute inset-0 bg-ink/70" />
+        {/* Darker at the bottom for smooth blend into the page */}
+        <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-ink via-ink/80 to-transparent" />
+        {/* Subtle top vignette */}
+        <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-ink to-transparent" />
       </div>
 
       {/* Content */}
-      <div className="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+      <div className="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div
-          className={`grid md:grid-cols-2 gap-12 items-center ${reversed ? "md:flex-row-reverse" : ""}`}
+          className={`grid lg:grid-cols-2 gap-8 lg:gap-12 items-center ${
+            reversed ? "lg:[&>*:first-child]:order-2" : ""
+          }`}
         >
           <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
-            className="space-y-6"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7 }}
+            className="space-y-5 sm:space-y-6 text-center lg:text-left"
           >
             {badge && (
-              <span className="inline-block px-4 py-1.5 bg-mutedBlue/20 border border-mutedBlue/30 rounded-full text-mutedBlue text-sm font-medium">
+              <span className="inline-block px-4 py-1.5 bg-accent/15 border border-accent/30 rounded-full text-accent text-xs sm:text-sm font-medium">
                 {badge}
               </span>
             )}
 
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-deepCharcoal">
+            {/* Plain white title — no gradient */}
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight">
               {title}
             </h1>
 
             {subtitle && (
-              <h2 className="text-xl md:text-2xl text-deepCharcoal/80 font-medium">
+              <h2 className="text-lg sm:text-xl md:text-2xl text-gray-300 font-medium">
                 {subtitle}
               </h2>
             )}
 
-            <p className="text-deepCharcoal/70 text-lg max-w-lg leading-relaxed">
-              {description}
-            </p>
+            {description && (
+              <p className="text-gray-400 text-base sm:text-lg max-w-xl mx-auto lg:mx-0 leading-relaxed">
+                {description}
+              </p>
+            )}
 
-            <div className="flex flex-wrap gap-4 pt-4">
+            <div className="flex flex-wrap gap-3 sm:gap-4 justify-center lg:justify-start pt-2">
               <Link
                 to={ctaLink}
-                className="px-8 py-3 bg-mutedBlue rounded-full text-white font-semibold hover:shadow-lg hover:shadow-mutedBlue/25 transition-all duration-300 flex items-center gap-2 group"
+                className="px-6 sm:px-8 py-3 bg-accent rounded-full text-ink font-semibold hover:bg-accent/90 hover:shadow-lg hover:shadow-accent/30 transition-all duration-300 flex items-center gap-2 group text-sm sm:text-base"
               >
                 {ctaText}
                 <FaArrowRight className="group-hover:translate-x-1 transition-transform" />
@@ -66,7 +78,7 @@ const HeroSection = ({
               {ctaLink !== "/contact" && (
                 <Link
                   to="/contact"
-                  className="px-8 py-3 border border-mutedBlue/30 rounded-full text-deepCharcoal font-semibold hover:bg-mutedBlue/10 transition-all duration-300"
+                  className="px-6 sm:px-8 py-3 border border-white/20 rounded-full text-white font-semibold hover:bg-white/10 hover:border-accent/50 transition-all duration-300 text-sm sm:text-base"
                 >
                   Contact Me
                 </Link>
@@ -74,26 +86,19 @@ const HeroSection = ({
             </div>
           </motion.div>
 
-          {/* Optional right side content */}
-          {!reversed && (
-            <motion.div
-              initial={{ opacity: 0, x: 50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="hidden md:block"
-            />
-          )}
+          {/* Right spacer for grid balance */}
+          {!reversed && <div className="hidden lg:block" />}
         </div>
       </div>
 
-      {/* Scroll Indicator */}
+      {/* Scroll indicator */}
       <motion.div
-        animate={{ y: [0, 10, 0] }}
-        transition={{ duration: 2, repeat: Infinity }}
-        className="absolute bottom-8 left-1/2 transform -translate-x-1/2 hidden md:block"
+        animate={{ y: [0, 8, 0] }}
+        transition={{ duration: 1.8, repeat: Infinity }}
+        className="absolute bottom-6 left-1/2 -translate-x-1/2 hidden sm:block"
       >
-        <div className="w-6 h-10 border-2 border-mutedBlue/40 rounded-full flex justify-center">
-          <div className="w-1 h-3 bg-mutedBlue rounded-full mt-2 animate-scroll" />
+        <div className="w-6 h-10 border-2 border-accent/40 rounded-full flex justify-center">
+          <div className="w-1 h-3 bg-accent rounded-full mt-2" />
         </div>
       </motion.div>
     </section>

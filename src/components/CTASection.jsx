@@ -4,85 +4,62 @@ import { Link } from "react-router-dom";
 import { FaArrowRight, FaRocket } from "react-icons/fa";
 
 const CTASection = ({
-  title = "Ready to Start Your Project?",
-  subtitle = "Let's bring your ideas to life with cutting-edge technology.",
+  title = "Ready to build something amazing?",
+  subtitle = "Let's bring your ideas to life with cutting-edge AI and web technologies.",
   buttonText = "Let's Talk",
   buttonLink = "/contact",
-  variant = "default", // default, dark, gradient
+  variant = "default", // "default" | "gradient"
 }) => {
-  const variants = {
-    default: {
-      bg: "bg-mutedBlue/10 border border-mutedBlue/20",
-      text: "text-deepCharcoal",
-    },
-    dark: {
-      bg: "bg-deepCharcoal/5 border border-deepCharcoal/10",
-      text: "text-deepCharcoal",
-    },
-    gradient: {
-      bg: "bg-mutedBlue text-white",
-      text: "text-white",
-    },
-  };
-
-  const currentVariant = variants[variant];
+  const isGradient = variant === "gradient";
 
   return (
-    <section className="py-20 bg-lightWhite">
+    <section className="py-16 sm:py-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
           viewport={{ once: true }}
-          className={`relative rounded-3xl p-12 text-center overflow-hidden ${currentVariant.bg}`}
+          transition={{ duration: 0.6 }}
+          className={`relative rounded-3xl p-8 sm:p-12 text-center overflow-hidden border ${
+            isGradient
+              ? "border-accent/30 bg-gradient-to-br from-accent/20 via-accent/10 to-transparent"
+              : "border-white/10 bg-white/5 backdrop-blur-xl"
+          }`}
         >
-          {/* Background Animation */}
-          <div className="absolute inset-0">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-mutedBlue/20 rounded-full filter blur-3xl animate-pulse" />
-            <div className="absolute bottom-0 left-0 w-64 h-64 bg-mutedBlue/20 rounded-full filter blur-3xl animate-pulse delay-1000" />
-          </div>
+          {/* Glow blobs */}
+          <div className="absolute -top-20 -right-20 w-64 h-64 bg-accent/20 rounded-full blur-3xl" />
+          <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-accent/10 rounded-full blur-3xl" />
 
           <div className="relative z-10">
             <motion.div
-              animate={{ y: [0, -10, 0] }}
-              transition={{ duration: 2, repeat: Infinity }}
-              className="inline-block mb-6"
+              animate={{ y: [0, -8, 0] }}
+              transition={{ duration: 2.2, repeat: Infinity }}
+              className="inline-block mb-5"
             >
-              <FaRocket className="text-5xl text-mutedBlue" />
+              <FaRocket className="text-4xl sm:text-5xl text-accent" />
             </motion.div>
 
-            <h2
-              className={`text-3xl md:text-4xl lg:text-5xl font-bold mb-4 ${currentVariant.text}`}
-            >
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-3">
               {title}
             </h2>
-            <p
-              className={`text-lg max-w-2xl mx-auto mb-8 ${variant === "gradient" ? "text-white/90" : "text-deepCharcoal/70"}`}
-            >
+            <p className="text-gray-400 text-sm sm:text-base md:text-lg max-w-2xl mx-auto mb-8">
               {subtitle}
             </p>
 
-            <div className="flex flex-wrap justify-center gap-4">
+            <div className="flex flex-wrap justify-center gap-3 sm:gap-4">
               <Link
                 to={buttonLink}
-                className={`px-8 py-3 rounded-full font-semibold transition-all duration-300 flex items-center gap-2 group ${
-                  variant === "gradient"
-                    ? "bg-white text-mutedBlue hover:shadow-xl hover:shadow-white/25"
-                    : "bg-mutedBlue text-white hover:shadow-lg hover:shadow-mutedBlue/25"
-                }`}
+                className="px-6 sm:px-8 py-3 rounded-full bg-accent text-ink font-semibold hover:bg-accent/90 hover:shadow-lg hover:shadow-accent/30 transition-all duration-300 flex items-center gap-2 group text-sm sm:text-base"
               >
                 {buttonText}
                 <FaArrowRight className="group-hover:translate-x-1 transition-transform" />
               </Link>
-              {variant !== "gradient" && (
-                <Link
-                  to="/portfolio"
-                  className="px-8 py-3 border border-mutedBlue/30 rounded-full text-deepCharcoal font-semibold hover:bg-mutedBlue/10 transition-all duration-300"
-                >
-                  View My Work
-                </Link>
-              )}
+              <Link
+                to="/portfolio"
+                className="px-6 sm:px-8 py-3 rounded-full border border-white/20 text-white font-semibold hover:bg-white/10 transition-all duration-300 text-sm sm:text-base"
+              >
+                View My Work
+              </Link>
             </div>
           </div>
         </motion.div>

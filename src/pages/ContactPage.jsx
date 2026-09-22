@@ -1,26 +1,23 @@
 // src/pages/ContactPage.jsx
-import Contact from '../components/Contact';
-import Breadcrumb from '../components/Breadcrumb';
-import HeroSection from '../components/HeroSection';
-import CTASection from '../components/CTASection';
+import Contact from "../components/Contact";
+import Breadcrumb from "../components/Breadcrumb";
+import HeroSection from "../components/HeroSection";
 
-const ContactPage = () => {
-  return (
-    <>
-      <HeroSection
-        title="Let's Connect"
-        subtitle="Get in Touch"
-        description="Have a project in mind? Let's discuss how I can help you bring your ideas to life with web development and AI automation. I'm just one message away!"
-        image="https://unsplash.com/photos/laptop-computer-beside-coffee-mug-j4uuKnN43_M"
-        ctaText="Send Message"
-        ctaLink="#contact-form"
-        badge="Get in Touch"
-        reversed={true}
-      />
-      <Breadcrumb />
-      <Contact />
-    </>
-  );
-};
+const ContactPage = () => (
+  <>
+    <HeroSection
+      title="Let's Connect"
+      subtitle="Get in Touch"
+      description="Have a project in mind? Let's discuss how I can help bring your ideas to life with AI and modern web tech."
+      image="https://images.unsplash.com/photo-1516321497487-e288fb19713f?auto=format&fit=crop&w=1600&q=80"
+      ctaText="Send Message"
+      ctaLink="#contact-form"
+      badge="Contact"
+      reversed
+    />
+    <Breadcrumb />
+    <Contact />
+  </>
+);
 
 export default ContactPage;
